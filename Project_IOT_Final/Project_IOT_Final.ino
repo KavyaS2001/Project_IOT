@@ -41,7 +41,7 @@ void loop() {
     sensorInitialTimeCount++;
 
     if (sensorInitialTimeCount >= (sensorTimeCount * 5)) {
-      digitalWrite(12, HIGH);
+      tone(12, 1000);
 
       if (engineStatus == 0) {
         lcd.clear();
@@ -90,7 +90,7 @@ void loop() {
     }
 
   } else {
-    digitalWrite(12, LOW);
+    noTone(12);
 
     if (alcoholDetected) {
       sensorInitialTimeCount = 0;
