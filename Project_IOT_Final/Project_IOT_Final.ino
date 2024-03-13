@@ -1,10 +1,11 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(32,16,2);
+LiquidCrystal_I2C lcd(0x27,16,2);
 
 
 int startButton = 8;
 int engine = 10;
+int engine2 = 11;
 int engineStatus = 0;
 int indicatorLed = 9;
 int buttonNew;
@@ -23,6 +24,7 @@ void setup() {
 
   pinMode(indicatorLed, OUTPUT);
   pinMode(engine, OUTPUT);
+  pinMode(engine2, OUTPUT);
   pinMode(startButton, INPUT_PULLUP);  // set the internal pull up resistor, unpressed button is HIGH
   pinMode(12, OUTPUT);
   pinMode(13, INPUT);
@@ -38,7 +40,7 @@ void loop() {
   int gasValue = analogRead(0);  // alcohol sensor
 
 
-  if (gasValue > 200) {
+  if (gasValue > 250) {
     digitalWrite(indicatorLed, HIGH);
     sensorInitialTimeCount++;
 
@@ -85,6 +87,7 @@ void loop() {
         }
 
         digitalWrite(engine, 0);
+        digitalWrite(engine2, 0);
         engineStatus = 0;
       }
 
@@ -127,6 +130,7 @@ void loop() {
         }
 
         digitalWrite(engine, 1);
+        digitalWrite(engine2, 1);
         engineStatus = 1;
 
         lcd.clear();
@@ -135,6 +139,7 @@ void loop() {
 
       } else {
         digitalWrite(engine, 0);
+        digitalWrite(engine2, 0);
         engineStatus = 0;
         lcd.clear();
         lcd.setCursor(0, 0);
