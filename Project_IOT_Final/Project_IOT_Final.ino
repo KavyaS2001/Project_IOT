@@ -1,8 +1,14 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <Adafruit_GPS.h>
+#include <SoftwareSerial.h>
+
 LiquidCrystal_I2C lcd(0x27,16,2);
+SoftwareSerial mySerial(3, 2);
+Adafruit_GPS GPS(&mySerial);
 
 
+char c;
 int startButton = 8;
 int engine = 10;
 int engine2 = 11;
@@ -12,15 +18,25 @@ int buttonNew;
 int buttonOld = 1;
 bool alcoholDetected = false;
 int sensorInitialTimeCount = 0;
+int gpsInitialTimeCount = 0;
 
 int engineTerminatingTime = 10;
 int sensorTimeCount = 3;
 
 
 void setup() {
+  Serial.begin(9600);
+  GPS.begin(9600);
   lcd.begin(16,2);
   lcd.init();
   lcd.backlight(); 
+
+  
+
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+
 
   pinMode(indicatorLed, OUTPUT);
   pinMode(engine, OUTPUT);
@@ -37,7 +53,40 @@ void setup() {
 }
 
 void loop() {
+  clearGPS();
+
+  while (!GPS.newNMEAreceived()) {
+    c = GPS.read();
+  }
+
+  GPS.parse(GPS.lastNMEA());
+
+  if (GPS.fix) {
+    Serial.print("Location: ");
+    Serial.print(GPS.latitude, 4);
+    Serial.print(GPS.lat);
+    Serial.print(", ");
+    Serial.print(GPS.longitude, 4);
+    Serial.println(GPS.lon);
+    Serial.print("Google Maps location: ");
+    Serial.print(GPS.latitudeDegrees, 4);
+    Serial.print(", ");
+    Serial.println(GPS.longitudeDegrees, 4);
+
+    Serial.print("Speed (knots): ");
+    Serial.println(GPS.speed);
+    Serial.print("Heading: ");
+    Serial.println(GPS.angle);
+    Serial.print("Altitude: ");
+    Serial.println(GPS.altitude);
+
+    Serial.println("-------------------------------------");
+  }
+  
+
   int gasValue = analogRead(0);  // alcohol sensor
+
+  Serial.println(gasValue);
 
 
   if (gasValue > 250) {
@@ -156,4 +205,16 @@ void loop() {
   }
 
   delay(200);
+}
+
+void clearGPS() {
+  while (!GPS.newNMEAreceived()) {
+    c = GPS.read();
+  }
+  GPS.parse(GPS.lastNMEA());
+
+  while (!GPS.newNMEAreceived()) {
+    c = GPS.read();
+  }
+  GPS.parse(GPS.lastNMEA());
 }
