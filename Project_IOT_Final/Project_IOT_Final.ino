@@ -1,11 +1,11 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include <Adafruit_GPS.h>
+// #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 SoftwareSerial mySerial(3, 2);
-Adafruit_GPS GPS(&mySerial);
+// Adafruit_GPS GPS(&mySerial);
 
 
 char c;
@@ -26,16 +26,16 @@ int sensorTimeCount = 3;
 
 void setup() {
   Serial.begin(9600);
-  GPS.begin(9600);
+  // GPS.begin(9600);
   lcd.begin(16,2);
   lcd.init();
   lcd.backlight(); 
 
   
 
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
 
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  // GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 
 
   pinMode(indicatorLed, OUTPUT);
@@ -53,35 +53,35 @@ void setup() {
 }
 
 void loop() {
-  clearGPS();
+  // clearGPS();
 
-  while (!GPS.newNMEAreceived()) {
-    c = GPS.read();
-  }
+  // while (!GPS.newNMEAreceived()) {
+  //   c = GPS.read();
+  // }
 
-  GPS.parse(GPS.lastNMEA());
+  // GPS.parse(GPS.lastNMEA());
 
-  if (GPS.fix) {
-    Serial.print("Location: ");
-    Serial.print(GPS.latitude, 4);
-    Serial.print(GPS.lat);
-    Serial.print(", ");
-    Serial.print(GPS.longitude, 4);
-    Serial.println(GPS.lon);
-    Serial.print("Google Maps location: ");
-    Serial.print(GPS.latitudeDegrees, 4);
-    Serial.print(", ");
-    Serial.println(GPS.longitudeDegrees, 4);
+  // if (GPS.fix) {
+  //   Serial.print("Location: ");
+  //   Serial.print(GPS.latitude, 4);
+  //   Serial.print(GPS.lat);
+  //   Serial.print(", ");
+  //   Serial.print(GPS.longitude, 4);
+  //   Serial.println(GPS.lon);
+  //   Serial.print("Google Maps location: ");
+  //   Serial.print(GPS.latitudeDegrees, 4);
+  //   Serial.print(", ");
+  //   Serial.println(GPS.longitudeDegrees, 4);
 
-    Serial.print("Speed (knots): ");
-    Serial.println(GPS.speed);
-    Serial.print("Heading: ");
-    Serial.println(GPS.angle);
-    Serial.print("Altitude: ");
-    Serial.println(GPS.altitude);
+  //   Serial.print("Speed (knots): ");
+  //   Serial.println(GPS.speed);
+  //   Serial.print("Heading: ");
+  //   Serial.println(GPS.angle);
+  //   Serial.print("Altitude: ");
+  //   Serial.println(GPS.altitude);
 
-    Serial.println("-------------------------------------");
-  }
+  //   Serial.println("-------------------------------------");
+  // }
   
 
   int gasValue = analogRead(0);  // alcohol sensor
@@ -207,14 +207,14 @@ void loop() {
   delay(200);
 }
 
-void clearGPS() {
-  while (!GPS.newNMEAreceived()) {
-    c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
+// void clearGPS() {
+//   while (!GPS.newNMEAreceived()) {
+//     c = GPS.read();
+//   }
+//   GPS.parse(GPS.lastNMEA());
 
-  while (!GPS.newNMEAreceived()) {
-    c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-}
+//   while (!GPS.newNMEAreceived()) {
+//     c = GPS.read();
+//   }
+//   GPS.parse(GPS.lastNMEA());
+// }
